@@ -1,0 +1,58 @@
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-3xl font-bold text-sky-900 mb-6">Nuestro Menú</h1>
+
+  <% if (menuImages && menuImages.length) { %>
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold text-sky-900 mb-3">Galería de Menú</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <% menuImages.forEach(img => { %>
+          <div class="rounded overflow-hidden shadow bg-white">
+            <img src="<%= img.url %>" alt="<%= img.name %>" class="w-full h-40 object-cover">
+            <div class="px-3 py-2">
+              <p class="text-sm text-gray-700 truncate"><%= img.name %></p>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </section>
+  <% } %>
+
+  <% if (menu && menu.length) { %>
+    <section>
+      <% menu.forEach(cat => { %>
+        <div class="mb-8">
+          <h2 class="text-2xl font-semibold text-sky-900 mb-3"><%= cat.name %></h2>
+          <% if (cat.items && cat.items.length) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <% cat.items.forEach(item => { %>
+                <div class="bg-white rounded shadow p-4 flex items-start">
+                  <% if (item.image_url) { %>
+                    <img src="<%= item.image_url %>" alt="<%= item.name %>" class="w-20 h-20 object-cover rounded mr-4">
+                  <% } else { %>
+                    <div class="w-20 h-20 bg-gray-200 rounded mr-4 flex items-center justify-center">
+                      <i class="fas fa-utensils text-gray-400"></i>
+                    </div>
+                  <% } %>
+                  <div class="flex-1">
+                    <div class="flex justify-between items-baseline">
+                      <h3 class="text-lg font-semibold text-gray-900"><%= item.name %></h3>
+                      <span class="text-sky-700 font-semibold">Q<%= parseFloat(item.price).toFixed(2) %></span>
+                    </div>
+                    <% if (item.description) { %>
+                      <p class="text-gray-600 text-sm mt-1"><%= item.description %></p>
+                    <% } %>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <p class="text-gray-500">No hay productos en esta categoría.</p>
+          <% } %>
+        </div>
+      <% }) %>
+    </section>
+  <% } else { %>
+    <p class="text-gray-500">No hay categorías ni productos disponibles.</p>
+  <% } %>
+</div>
+

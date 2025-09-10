@@ -1,0 +1,76 @@
+<%- include('../../partials/admin/header', { title: 'Gestor de Medios' }) %>
+
+<div class="bg-white shadow rounded-lg p-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4">Subir archivo</h2>
+  <form action="/admin/media/upload" method="POST" enctype="multipart/form-data" class="flex items-end space-x-3 mb-8">
+    <div>
+      <label class="block text-sm font-medium text-sky-900 mb-1">Carpeta destino</label>
+      <select name="folder" class="mt-1 block w-56 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md">
+        <option value="products">products/</option>
+        <option value="menu">menu/</option>
+        <option value="hero">hero/</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-sky-900 mb-1">Archivo</label>
+      <input type="file" name="file" accept="image/*" class="block w-full text-sm text-gray-700" required>
+    </div>
+    <button type="submit" class="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded-md text-sm font-medium">Subir</button>
+  </form>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div>
+      <h3 class="text-lg font-semibold text-sky-900 mb-3">hero/</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <% heroImages.forEach(img => { %>
+          <div class="border rounded overflow-hidden bg-white">
+            <img src="<%= img.url %>" class="w-full h-24 object-cover" alt="<%= img.name %>">
+            <div class="p-2 flex items-center justify-between">
+              <span class="text-xs truncate"><%= img.name %></span>
+              <form action="/admin/media/delete" method="POST" onsubmit="return confirm('¿Eliminar <%= img.name %>?')">
+                <input type="hidden" name="path" value="<%= img.path %>">
+                <button type="submit" class="text-red-600 text-xs">Eliminar</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold text-sky-900 mb-3">menu/</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <% menuImages.forEach(img => { %>
+          <div class="border rounded overflow-hidden bg-white">
+            <img src="<%= img.url %>" class="w-full h-24 object-cover" alt="<%= img.name %>">
+            <div class="p-2 flex items-center justify-between">
+              <span class="text-xs truncate"><%= img.name %></span>
+              <form action="/admin/media/delete" method="POST" onsubmit="return confirm('¿Eliminar <%= img.name %>?')">
+                <input type="hidden" name="path" value="<%= img.path %>">
+                <button type="submit" class="text-red-600 text-xs">Eliminar</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold text-sky-900 mb-3">products/</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <% productImages.forEach(img => { %>
+          <div class="border rounded overflow-hidden bg-white">
+            <img src="<%= img.url %>" class="w-full h-24 object-cover" alt="<%= img.name %>">
+            <div class="p-2 flex items-center justify-between">
+              <span class="text-xs truncate"><%= img.name %></span>
+              <form action="/admin/media/delete" method="POST" onsubmit="return confirm('¿Eliminar <%= img.name %>?')">
+                <input type="hidden" name="path" value="<%= img.path %>">
+                <button type="submit" class="text-red-600 text-xs">Eliminar</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/admin/footer') %>

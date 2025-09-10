@@ -1,0 +1,46 @@
+<%- include('../../partials/admin/header', { title: category ? 'Editar Categoría' : 'Agregar Categoría' }) %>
+
+<div class="bg-white shadow rounded-lg p-6">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-sky-900"><%= category ? 'Editar Categoría' : 'Agregar Nueva Categoría' %></h2>
+    <p class="text-gray-600"><%= category ? 'Actualiza la información de la categoría' : 'Completa el formulario para agregar una nueva categoría' %></p>
+  </div>
+
+  <form action="/admin/categories/save" method="POST" class="space-y-6">
+    <% if (category) { %>
+      <input type="hidden" name="id" value="<%= category.id %>">
+    <% } %>
+
+    <div class="grid grid-cols-1 gap-6">
+      <!-- Name -->
+      <div>
+        <label for="name" class="block text-sm font-medium text-sky-900">Nombre *</label>
+        <input type="text" id="name" name="name" required
+          value="<%= category ? category.name : '' %>"
+          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-sky-900">Descripción</label>
+        <textarea id="description" name="description" rows="3"
+          class="shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border border-gray-300 rounded-md"><%= category ? (category.description || '') : '' %></textarea>
+      </div>
+
+      <!-- Sort order -->
+      <div>
+        <label for="sort_order" class="block text-sm font-medium text-sky-900">Orden</label>
+        <input type="number" id="sort_order" name="sort_order" min="0"
+          value="<%= category ? (category.sort_order || 0) : 0 %>"
+          class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <a href="/admin/categories" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">Cancelar</a>
+      <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-sky-700 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"><%= category ? 'Actualizar Categoría' : 'Guardar Categoría' %></button>
+    </div>
+  </form>
+</div>
+
+<%- include('../../partials/admin/footer') %>

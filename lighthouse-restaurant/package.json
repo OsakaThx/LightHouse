@@ -1,0 +1,27 @@
+{
+  "name": "lighthouse-restaurant",
+  "version": "1.0.0",
+  "description": "Website for Lighthouse Restaurant in Guatemala",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.2",
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.2",
+    "method-override": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^7.0.6"
+  },
+  "devDependencies": {
+    "ethereal-email": "^1.0.0",
+    "nodemon": "^2.0.22"
+  }
+}

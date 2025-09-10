@@ -1,0 +1,52 @@
+<%- include('../../partials/admin/header', { title: 'Gestionar Páginas' }) %>
+
+<div class="bg-white shadow rounded-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Páginas</h2>
+    <a href="/admin/pages/add" class="bg-sky-700 hover:bg-sky-800 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+      <i class="fas fa-plus mr-2"></i> Nueva Página
+    </a>
+  </div>
+
+  <% if (pages && pages.length > 0) { %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Título</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orden</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% pages.forEach(p => { %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= p.title %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">/<%= p.slug %></td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= p.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+                  <%= p.status %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= p.sort_order || 0 %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <a href="/admin/pages/edit/<%= p.id %>" class="text-sky-700 hover:text-sky-900 mr-3"><i class="fas fa-edit"></i></a>
+                <form action="/admin/pages/delete/<%= p.id %>" method="POST" class="inline">
+                  <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Eliminar esta página?');">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="text-center text-gray-500">No hay páginas. <a href="/admin/pages/add" class="text-sky-700">Crea la primera</a>.</div>
+  <% } %>
+</div>
+
+<%- include('../../partials/admin/footer') %>

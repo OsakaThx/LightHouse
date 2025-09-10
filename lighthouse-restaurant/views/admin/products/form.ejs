@@ -1,0 +1,211 @@
+<%- include('../../partials/admin/header', { title: product ? 'Editar Producto' : 'Agregar Producto' }) %>
+
+<div class="bg-white shadow rounded-lg p-6">
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-sky-900"><%= product ? 'Editar Producto' : 'Agregar Nuevo Producto' %></h2>
+        <p class="text-gray-600"><%= product ? 'Actualiza la información del producto' : 'Completa el formulario para agregar un nuevo producto' %></p>
+    </div>
+
+    <form action="/admin/products/save" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <% if (product) { %>
+            <input type="hidden" name="id" value="<%= product.id %>">
+        <% } %>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Basic Information -->
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                        <h3 class="text-lg leading-6 font-medium text-sky-900">Información Básica</h3>
+                    </div>
+                    <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+                        <div class="grid grid-cols-1 gap-6">
+                            <!-- Name -->
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-sky-900">Nombre del Producto *</label>
+                                <input type="text" name="name" id="name" required
+                                    value="<%= product ? product.name : '' %>"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm">
+                            </div>
+                            
+                            <!-- Description -->
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-sky-900">Descripción</label>
+                                <div class="mt-1">
+                                    <textarea id="description" name="description" rows="3"
+                                        class="shadow-sm focus:ring-sky-500 focus:border-sky-500 block w-full sm:text-sm border border-gray-300 rounded-md"><%= product ? product.description : '' %></textarea>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500">Escribe una descripción detallada del producto.</p>
+                            </div>
+                            
+                            <!-- Category (optional) -->
+                            <div>
+                                <label for="category_id" class="block text-sm font-medium text-sky-900">Categoría</label>
+                                <select id="category_id" name="category_id"
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm rounded-md">
+                                    <option value="">Selecciona una categoría</option>
+                                    <% categories.forEach(category => { %>
+                                        <option value="<%= category.id %>" 
+                                            <%= product && product.category_id === category.id ? 'selected' : '' %>>
+                                            <%= category.name %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            
+                            <!-- Price -->
+                            <div>
+                                <label for="price" class="block text-sm font-medium text-sky-900">Precio (Q) *</label>
+                                <div class="mt-1 relative rounded-md shadow-sm">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 sm:text-sm">Q</span>
+                                    </div>
+                                    <input type="number" name="price" id="price" required step="0.01" min="0"
+                                        value="<%= product ? product.price.toFixed(2) : '0.00' %>"
+                                        class="focus:ring-sky-500 focus:border-sky-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+                                        placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Inventory -->
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                        <h3 class="text-lg leading-6 font-medium text-sky-900">Inventario</h3>
+                    </div>
+                    <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+                        <div class="grid grid-cols-1 gap-6">
+                            <!-- SKU -->
+                            <div class="col-span-1">
+                                <label for="sku" class="block text-sm font-medium text-sky-900">SKU</label>
+                                <input type="text" name="sku" id="sku"
+                                    value="<%= product ? product.sku || '' : '' %>"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                                    placeholder="Ej: PROD-001">
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="col-span-1">
+                                <label for="stock" class="block text-sm font-medium text-sky-900">Stock</label>
+                                <input type="number" name="stock" id="stock" min="0"
+                                    value="<%= product ? (product.stock || 0) : 0 %>"
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                                    placeholder="0">
+                            </div>
+                            
+                            <!-- Stock Status -->
+                            <div class="col-span-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Estado del Inventario</label>
+                                <div class="space-y-2">
+                                    <div class="flex items-center">
+                                        <input id="is_available" name="is_available" type="checkbox" 
+                                            <%= product && product.is_available ? 'checked' : '' %>
+                                            class="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 rounded">
+                                        <label for="is_available" class="ml-2 block text-sm text-gray-700">
+                                            Disponible para la venta
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="is_featured" name="is_featured" type="checkbox"
+                                            <%= product && product.is_featured ? 'checked' : '' %>
+                                            class="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300 rounded">
+                                        <label for="is_featured" class="ml-2 block text-sm text-gray-700">
+                                            Producto destacado
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Product Image -->
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                        <h3 class="text-lg leading-6 font-medium text-sky-900">Imagen del Producto</h3>
+                    </div>
+                    <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                            <div class="space-y-1 text-center">
+                                <% if (product && product.image_url) { %>
+                                    <img id="imagePreview" src="<%= product.image_url %>" alt="<%= product.name %>" class="mx-auto h-40 w-auto object-cover rounded-md">
+                                <% } else { %>
+                                    <svg id="defaultImage" class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                <% } %>
+                                <div class="flex text-sm text-gray-600 mt-2">
+                                    <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-sky-600 hover:text-sky-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-sky-500">
+                                        <span>Subir una imagen</span>
+                                        <input id="image" name="image" type="file" class="sr-only" accept="image/*" onchange="previewImage(this)">
+                                    </label>
+                                    <p class="pl-1">o arrastra y suelta</p>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF hasta 2MB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Publish -->
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                        <h3 class="text-lg leading-6 font-medium text-sky-900">Publicación</h3>
+                    </div>
+                    <div class="border-t border-gray-200 px-4 py-5 sm:p-6">
+                        <div class="flex justify-end space-x-3">
+                            <a href="/admin/products" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-sky-700 hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
+                                <%= product ? 'Actualizar Producto' : 'Guardar Producto' %>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function previewImage(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // Hide default image if it exists
+                const defaultImage = document.getElementById('defaultImage');
+                if (defaultImage) defaultImage.style.display = 'none';
+                
+                // Create or update image preview
+                let preview = document.getElementById('imagePreview');
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.id = 'imagePreview';
+                    preview.className = 'mx-auto h-40 w-auto object-cover rounded-md';
+                    input.parentNode.parentNode.insertBefore(preview, input.parentNode);
+                }
+                
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    // Initialize any additional form validations or plugins
+    document.addEventListener('DOMContentLoaded', function() {
+        // You can add any initialization code here
+    });
+</script>
+
+<%- include('../../partials/admin/footer') %>
